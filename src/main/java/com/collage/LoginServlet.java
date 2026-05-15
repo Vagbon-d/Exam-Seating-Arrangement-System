@@ -29,9 +29,12 @@ public class LoginServlet extends HttpServlet {
             // Load MySQL driver
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Connect to DB
+            // Connect to Railway MySQL
             Connection con = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/login", "root", "");
+                "jdbc:mysql://yamanote.proxy.rlwy.net:40653/railway?useSSL=false&allowPublicKeyRetrieval=true",
+                "root",
+                "UqrPfiRJTHKKKGchiEioXgPNqIwsLvaS"
+            );
 
             // SQL query
             PreparedStatement ps = con.prepareStatement(
@@ -43,12 +46,16 @@ public class LoginServlet extends HttpServlet {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                // ✅ SUCCESS LOGIN
+
+                // SUCCESS LOGIN
                 HttpSession session = request.getSession();
                 session.setAttribute("user", username);
+
                 response.sendRedirect("dashboard.jsp");
+
             } else {
-                // ❌ INVALID LOGIN
+
+                // INVALID LOGIN
                 out.println("<script type=\"text/javascript\">");
                 out.println("alert('Invalid Username or Password');");
                 out.println("location='index.html';");
@@ -58,6 +65,7 @@ public class LoginServlet extends HttpServlet {
             con.close();
 
         } catch (Exception e) {
+
             e.printStackTrace();
             out.println("Database Error: " + e.getMessage());
         }
